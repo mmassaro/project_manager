@@ -16,6 +16,7 @@ main(){
   PMNG=$PWD
 
   source ./lib/toogle.sh
+  source ./lib/add_project.sh
   source ./lib/project_manager.sh
 
 }
