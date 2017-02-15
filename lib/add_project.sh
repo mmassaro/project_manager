@@ -12,6 +12,8 @@ _is_project_exists() {
     fi
 }
 
+
+# XXX dans cette version, je ne modifie pas les path
 import_project() {
 
     local filename="foo"
@@ -31,21 +33,66 @@ import_project() {
         else
             echo "ERROR : Empty project"
             echo "DISPLAY MAN"
-        fi;
-    elif [[ $# -eq 2 ]] && [[ -d $2 ]] && [[ ! -d $1 ]] && [[ ! -f $1 ]]; then
-        if [[ -d $2 ]]; then
-            mkdir $PMNG/projects/available/$1
-            cp $2/* $PMNG/projects/available/$1/
-        elif [[ -f $2 ]]; then
-            mkdir $PMNG/projects/available/$1
-            cp $2 $PMNG/projects/available/$1/
-        else
-            echo "pas bon"
         fi
-    elif [[ $# -gt 0 ]]; then
-        echo "toto"
+    elif [[ $# -ge 2 ]]; then
+        if [[ ! -f "$1" ]] && [[ ! -d "$1" ]]; then
+            # XXX si le deuxieme c'est un dossier et qu'il n'y a que deux
+            # arguments c'est lui le projet alors je
+            # copie le contenue dans le projet
+            projectname=$1
+            if _is_project_exists $projectname; then return 1; fi
+            mkdir $PMNG/projects/available/$projectname
+
+
+
+
+            echo "je copie a partir de 2"
+
+
+
+        elif [[ -d  "$1" ]]; then
+            projectname=$1
+            if _is_project_exists $projectname; then return 1; fi
+            mkdir $PMNG/projects/available/$projectname
+            if [ -z $BASH_SOURCE ]; then
+                for ((i=1; i<=$#; i++))
+                do
+                    if [ -d ${@[$i]} ] || [ -f ${@[$i]} ]; then
+                        cp -r ${@[$i]} $PMNG/projects/available/$projectname/
+                    fi
+                done
+            else
+                for ((i=0; i<$#; i++))
+                do
+                    if [ -d ${@[$i]} ] || [ -f ${@[$i]} ]; then
+                        cp -r ${@[$i]} $PMNG/projects/available/$projectname/
+                    fi
+                done
+            fi
+        else
+            filename=$(basename "$1")
+            projectname=${filename%.*}
+            if _is_project_exists $projectname; then return 1; fi
+            mkdir $PMNG/projects/available/$projectname
+            if [ -z $BASH_SOURCE ]; then
+                for ((i=1; i<=$#; i++))
+                do
+                    if [ -d ${@[$i]} ] || [ -f ${@[$i]} ]; then
+                        cp -r ${@[$i]} $PMNG/projects/available/$projectname/
+                    fi
+                done
+            else
+                for ((i=0; i<$#; i++))
+                do
+                    if [ -d ${@[$i]} ] || [ -f ${@[$i]} ]; then
+                        cp -r ${@[$i]} $PMNG/projects/available/$projectname/
+                    fi
+                done
+            fi
+        fi
     else
-        echo "ERROR : "
+        echo "ERROR : No argument"
+        echo "DISPLAY MAN"
     fi
 
 
