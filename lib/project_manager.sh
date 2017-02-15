@@ -290,55 +290,55 @@ function set_args(){
 
 
 
-# XXX peut etre qu'on appelle avec ./
-# XXX pas de verification de la validité des parametres
-import_function() {
-    if [ -d $PMNG/func/$1 ]; then
-        echo "ERROR : The function $1 already exists"
-        return 1
-    fi
-
-    mkdir $PMNG/func/$1
-    cp $2 $PMNG/func/$1/core_$1.sh
-    if [ -n $3 ]; then
-        if [ ! "$3" = "-folder" ]; then
-            cp $3 $PMNG/func/$1/param_$1.sh
-            sed -i 's/'"$3"'/$PMNG\/func\/'"$1"'\/param_'"$1"'.sh/g' $PMNG/func/$1/core_$1.sh
-        else
-            cp -r $4 $PMNG/func/$1/$4
-            sed -i 's/'"$4"'/$PMNG\/func\/'"$1"'\/'"$4"'\//g' $PMNG/func/$1/core_$1.sh
-        fi
-    fi
-
-    if [ -n $4 ] && [ "$4" = "-folder" ]; then
-        cp -r $5 $PMNG/func/$1/$5
-        sed -i 's/'"$5"'/$PMNG\/func\/'"$1"'\/'"$5"'\//g' $PMNG/func/$1/core_$1.sh
-    fi
-}
-
-import_function() {
-    if [ -d $PMNG/func/$1 ]; then
-        echo "ERROR : The function $1 already exists"
-        return 1
-    fi
-
-    mkdir $PMNG/func/$1
-    cp $2 $PMNG/func/$1/core_$1.sh
-    if [ -n $3 ]; then
-        if [ ! "$3" = "-folder" ]; then
-            cp $3 $PMNG/func/$1/param_$1.sh
-            sed -i 's/'"$3"'/$PMNG\/func\/'"$1"'\/param_'"$1"'.sh/g' $PMNG/func/$1/core_$1.sh
-        else
-            cp -r $4 $PMNG/func/$1/$4
-            sed -i 's/'"$4"'/$PMNG\/func\/'"$1"'\/'"$4"'\//g' $PMNG/func/$1/core_$1.sh
-        fi
-    fi
-
-    if [ -n $4 ] && [ "$4" = "-folder" ]; then
-        cp -r $5 $PMNG/func/$1/$5
-        sed -i 's/'"$5"'/$PMNG\/func\/'"$1"'\/'"$5"'\//g' $PMNG/func/$1/core_$1.sh
-    fi
-}
+## XXX peut etre qu'on appelle avec ./
+## XXX pas de verification de la validité des parametres
+#import_function() {
+#    if [ -d $PMNG/func/$1 ]; then
+#        echo "ERROR : The function $1 already exists"
+#        return 1
+#    fi
+#
+#    mkdir $PMNG/func/$1
+#    cp $2 $PMNG/func/$1/core_$1.sh
+#    if [ -n $3 ]; then
+#        if [ ! "$3" = "-folder" ]; then
+#            cp $3 $PMNG/func/$1/param_$1.sh
+#            sed -i 's/'"$3"'/$PMNG\/func\/'"$1"'\/param_'"$1"'.sh/g' $PMNG/func/$1/core_$1.sh
+#        else
+#            cp -r $4 $PMNG/func/$1/$4
+#            sed -i 's/'"$4"'/$PMNG\/func\/'"$1"'\/'"$4"'\//g' $PMNG/func/$1/core_$1.sh
+#        fi
+#    fi
+#
+#    if [ -n $4 ] && [ "$4" = "-folder" ]; then
+#        cp -r $5 $PMNG/func/$1/$5
+#        sed -i 's/'"$5"'/$PMNG\/func\/'"$1"'\/'"$5"'\//g' $PMNG/func/$1/core_$1.sh
+#    fi
+#}
+#
+#import_function() {
+#    if [ -d $PMNG/func/$1 ]; then
+#        echo "ERROR : The function $1 already exists"
+#        return 1
+#    fi
+#
+#    mkdir $PMNG/func/$1
+#    cp $2 $PMNG/func/$1/core_$1.sh
+#    if [ -n $3 ]; then
+#        if [ ! "$3" = "-folder" ]; then
+#            cp $3 $PMNG/func/$1/param_$1.sh
+#            sed -i 's/'"$3"'/$PMNG\/func\/'"$1"'\/param_'"$1"'.sh/g' $PMNG/func/$1/core_$1.sh
+#        else
+#            cp -r $4 $PMNG/func/$1/$4
+#            sed -i 's/'"$4"'/$PMNG\/func\/'"$1"'\/'"$4"'\//g' $PMNG/func/$1/core_$1.sh
+#        fi
+#    fi
+#
+#    if [ -n $4 ] && [ "$4" = "-folder" ]; then
+#        cp -r $5 $PMNG/func/$1/$5
+#        sed -i 's/'"$5"'/$PMNG\/func\/'"$1"'\/'"$5"'\//g' $PMNG/func/$1/core_$1.sh
+#    fi
+#}
 
 
 

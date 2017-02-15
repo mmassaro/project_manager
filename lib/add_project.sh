@@ -1,26 +1,43 @@
 # vim: set sw=4 ts=4 sts=4 et tw=78 foldmarker={{{,}}} foldlevel=0 foldmethod=marker:
 
+# extension="${filename##*.}"
+# filename="${filename%.*}"
 
-
-import_function() {
-    if [ -d $PMNG/projects/available/$1 ]; then
+_is_project_exists() {
+    if [ -d "$PMNG/projects/available/$1" ]; then
         echo "ERROR : The function $1 already exists"
+        return 0
+    else
         return 1
     fi
+}
+
+import_project() {
+
+    local filename="foo"
+    local projectname="foo"
 
     if [[ $# -eq 1 ]]; then
         if [[ -d $1 ]]; then
-            cp -r $1 $PMNG/projects/available/$1
+            projectname=$(basename "$1")
+            if _is_project_exists $projectname; then return 1; fi
+            cp -r $1 $PMNG/projects/available/$projectname
+        elif [[ -f $1 ]]; then
+            filename=$(basename "$1")
+            projectname=${filename%.*}
+            if _is_project_exists $projectname; then return 1; fi
+            mkdir $PMNG/projects/available/$projectname
+            cp $1 $PMNG/projects/available/$projectname/$filename
         else
-            echo "ERROR : Empty project or empty project name"
+            echo "ERROR : Empty project"
             echo "DISPLAY MAN"
         fi;
     elif [[ $# -eq 2 ]] && [[ -d $2 ]] && [[ ! -d $1 ]] && [[ ! -f $1 ]]; then
         if [[ -d $2 ]]; then
-            mkdir $PMNG/project/available/$1
+            mkdir $PMNG/projects/available/$1
             cp $2/* $PMNG/projects/available/$1/
         elif [[ -f $2 ]]; then
-            mkdir $PMNG/project/available/$1
+            mkdir $PMNG/projects/available/$1
             cp $2 $PMNG/projects/available/$1/
         else
             echo "pas bon"
@@ -34,21 +51,21 @@ import_function() {
 
 
 
-    cp $2 $PMNG/func/$1/core_$1.sh
-    if [ -n $3 ]; then
-        if [ ! "$3" = "-folder" ]; then
-            cp $3 $PMNG/func/$1/param_$1.sh
-            sed -i 's/'"$3"'/$PMNG\/func\/'"$1"'\/param_'"$1"'.sh/g' $PMNG/func/$1/core_$1.sh
-        else
-            cp -r $4 $PMNG/func/$1/$4
-            sed -i 's/'"$4"'/$PMNG\/func\/'"$1"'\/'"$4"'\//g' $PMNG/func/$1/core_$1.sh
-        fi
-    fi
+    #cp $2 $PMNG/func/$1/core_$1.sh
+    #if [ -n $3 ]; then
+    #    if [ ! "$3" = "-folder" ]; then
+    #        cp $3 $PMNG/func/$1/param_$1.sh
+    #        sed -i 's/'"$3"'/$PMNG\/func\/'"$1"'\/param_'"$1"'.sh/g' $PMNG/func/$1/core_$1.sh
+    #    else
+    #        cp -r $4 $PMNG/func/$1/$4
+    #        sed -i 's/'"$4"'/$PMNG\/func\/'"$1"'\/'"$4"'\//g' $PMNG/func/$1/core_$1.sh
+    #    fi
+    #fi
 
-    if [ -n $4 ] && [ "$4" = "-folder" ]; then
-        cp -r $5 $PMNG/func/$1/$5
-        sed -i 's/'"$5"'/$PMNG\/func\/'"$1"'\/'"$5"'\//g' $PMNG/func/$1/core_$1.sh
-    fi
+    #if [ -n $4 ] && [ "$4" = "-folder" ]; then
+    #    cp -r $5 $PMNG/func/$1/$5
+    #    sed -i 's/'"$5"'/$PMNG\/func\/'"$1"'\/'"$5"'\//g' $PMNG/func/$1/core_$1.sh
+    #fi
 }
 
 

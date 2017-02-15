@@ -16,15 +16,15 @@
 
 project() {
     if [ $# -ne "1" ] && [ $# -ne "2" ]; then
-        echo "Usage: `basename $0` option [plugin_name]"
+        echo "Usage: `basename $0` option [project_name]"
         echo "option :"
         echo "         show"
-        echo "         enable  (plugin_name required)"
-        echo "         disable (plugin_name required)"
+        echo "         enable  (project_name required)"
+        echo "         disable (project_name required)"
     elif [ "$1" = "show" ]; then
         printf "\nList of projects\n"
         printf "---------------------\n"
-        printf "%-12s%-25s%s\n" 'Enabled ?' 'Plugin' 'Description'
+        printf "%-12s%-25s%s\n" 'Enabled ?' 'Project' 'Description'
         printf "\n"
         for project in $PMNG/projects/available/*; do
             p=$(basename $project)
@@ -47,32 +47,32 @@ project() {
             p=$2
             if [ ! -d "$PMNG/projects/enable/$p" ] && [ -d "$PMNG/projects/available/$p" ]; then
                 ln -s $PMNG/projects/available/$p/ $PMNG/projects/enable/$p
-                echo "Plugin $p enabled"
+                echo "Project $p enabled"
             else
                 if [ -d "$PMNG/projects/enable/$p" ]; then
-                    echo "Plugin already enabled"
+                    echo "Project already enabled"
                 else
-                    echo "Plugin not found"
+                    echo "Project not found"
                 fi
             fi
         fi
     elif [ "$1" = "disable" ]; then
         if [ $# -ne "2" ]; then
-            echo "Usage: `basename $0` disable plugin_name"
+            echo "Usage: `basename $0` disable project_name"
         else
             p=$2
             if [ -d "$PMNG/projects/enable/$p" ]; then
                 unlink $PMNG/projects/enable/$p
-                echo "Plugin $p disabled"
+                echo "Project $p disabled"
             else
-                echo "Plugin not enabled"
+                echo "Project not enabled"
             fi
         fi
     else
-        echo "Usage: `basename $0` option [plugin_name]"
+        echo "Usage: `basename $0` option [project_name]"
         echo "option :"
         echo "         show"
-        echo "         enable  (plugin_name required)"
-        echo "         disable (plugin_name required)"
+        echo "         enable  (project_name required)"
+        echo "         disable (project_name required)"
     fi
 }
