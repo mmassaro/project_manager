@@ -36,20 +36,28 @@ import_project() {
         fi
     elif [[ $# -ge 2 ]]; then
         if [[ ! -f "$1" ]] && [[ ! -d "$1" ]]; then
-            # XXX si le deuxieme c'est un dossier et qu'il n'y a que deux
-            # arguments c'est lui le projet alors je
-            # copie le contenue dans le projet
             projectname=$1
             if _is_project_exists $projectname; then return 1; fi
             mkdir $PMNG/projects/available/$projectname
-
-
-
-
-            echo "je copie a partir de 2"
-
-
-
+            if [[ $# -eq 2 ]] && [[ -d "$2" ]]; then
+                cp $2/* $PMNG/projects/available/$projectname/
+            else
+                if [ -z $BASH_SOURCE ]; then
+                    for ((i=2; i<=$#; i++))
+                    do
+                        if [ -d ${@[$i]} ] || [ -f ${@[$i]} ]; then
+                            cp -r ${@[$i]} $PMNG/projects/available/$projectname/
+                        fi
+                    done
+                else
+                    for ((i=2; i<$#; i++))
+                    do
+                        if [ -d ${@[$i]} ] || [ -f ${@[$i]} ]; then
+                            cp -r ${@[$i]} $PMNG/projects/available/$projectname/
+                        fi
+                    done
+                fi
+            fi
         elif [[ -d  "$1" ]]; then
             projectname=$1
             if _is_project_exists $projectname; then return 1; fi

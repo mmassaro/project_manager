@@ -23,13 +23,13 @@ project() {
         echo "         disable (project_name required)"
     elif [ "$1" = "show" ]; then
         printf "\nList of projects\n"
-        printf "---------------------\n"
+        echo "---------------------"
         printf "%-12s%-25s%s\n" 'Enabled ?' 'Project' 'Description'
         printf "\n"
         for project in $PMNG/projects/available/*; do
             p=$(basename $project)
             if [ -f "$project/README.md" ]; then
-                description=$(cat "$project/README.md" | grep 'project-description' | sed 's/\#\sproject-description\s:\s//')
+                description=$(cat "$project/README.md" | /usr/bin/grep 'project-description' | sed 's/\# project-description : //')
             else
                 description="Description unreadable. File name no standart"
             fi

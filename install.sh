@@ -17,7 +17,8 @@ main(){
 
   source ./lib/toogle.sh
   source ./lib/add_project.sh
-  source ./lib/project_manager.sh
+  source ./lib/display_projects.sh
+  source ./lib/args_manager.sh
 
 }
 
