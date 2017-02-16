@@ -14,7 +14,6 @@
 #
 ##############################################################################
 
-# TODO PRIORITE : revoir les fonctions get_index + remove
 
 
 # XXX dans l'ideal on installe ca dans un .projet_latex
@@ -28,40 +27,121 @@
 # l'utilisateur et une autre qui en telecharge une
 
 
-function _get_index(){
-    index="$(echo ${opt_list[@]/$1//} | cut -d/ -f1 | wc -w | tr -d ' ')"
-    last=${#opt_list[@]}
-    if [ "$index" = "$last" ]; then
-        echo "Error : Option $1 not found"
-        # XXX valeur de retour pour l'erreur
-        index=1000
+
+#_get_index(){
+#    index="$(echo ${opt_list[@]/$1//} | cut -d/ -f1 | wc -w | tr -d ' ')"
+#    last=${#opt_list[@]}
+#    if [ "$index" = "$last" ]; then
+#        echo "Error : Option $1 not found"
+#        # XXX valeur de retour pour l'erreur
+#        index=1000
+#    fi
+#}
+#
+#_get_index_silent(){
+#    index="$(echo ${opt_list[@]/$1//} | cut -d/ -f1 | wc -w | tr -d ' ')"
+#    last=${#opt_list[@]}
+#    if [ "$index" = "$last" ]; then
+#        index=1000
+#    fi
+#}
+
+
+# Attention difference bash zsh. bash de 0 a n-1
+_get_index() {
+    local it=0
+    if [ -z $BASH_SOURCE ]; then
+        while [ "${opt_list[$it]}" != "$1"  ] && [ $it -le "${#opt_list[@]}" ]; do 
+            ((it++)); 
+        done
+        if [ $it -le "${#opt_list[@]}"  ]; then
+            index=$it
+            return 0
+        else
+            echo "Error : Option $1 not found"
+            index=1000
+            return 1
+        fi
+    else
+        while [ "${opt_list[$it]}" != "$1"  ] && [ $it -lt "${#opt_list[@]}" ]; do 
+            ((it++)); 
+        done
+        if [ $it -lt "${#opt_list[@]}"  ]; then
+            index=$it
+            return 0
+        else
+            echo "Error : Option $1 not found"
+            index=1000
+            return 1
+        fi
+    fi
+}
+
+_get_index_silent() {
+    local it=0
+    if [ -z $BASH_SOURCE ]; then
+        while [ "${opt_list[$it]}" != "$1"  ] && [ $it -le "${#opt_list[@]}" ]; do 
+            ((it++)); 
+        done
+        if [ $it -le "${#opt_list[@]}"  ]; then
+            index=$it
+            return 0
+        else
+            index=1000
+            return 1
+        fi
+    else
+        while [ "${opt_list[$it]}" != "$1"  ] && [ $it -lt "${#opt_list[@]}" ]; do 
+            ((it++)); 
+        done
+        if [ $it -lt "${#opt_list[@]}"  ]; then
+            index=$it
+            return 0
+        else
+            index=1000
+            return 1
+        fi
     fi
 }
 
 
-function _get_index_silent(){
-    index="$(echo ${opt_list[@]/$1//} | cut -d/ -f1 | wc -w | tr -d ' ')"
-    last=${#opt_list[@]}
-    if [ "$index" = "$last" ]; then
-        index=1000
-    fi
-}
 
 
-function _add_desc(){
+_add_desc(){
     func_desc+=("$1")
 }
 
-function _remove_desc(){
-    if [ -z ${func_desc+x} ]; then
+# dans le display, les options sont numeroté.
+# je peux donc faire en sorte de supprimer l'exemple numéro i
+_remove_desc(){
+    if [ -z ${func_desc+x} ] || [[ $1 -ge ${#func_desc[@]} ]]; then
         echo "Error : Cannot remove option"
     else
+
+        if [ "$1" = "0" ]; then
+            echo "ERROR : Cannot remove the description"
+        else
+            local it=$1
+            local im1=$((it))
+            local ip1=$((it+2))
+            local begin=1
+            local end=${#func_desc[@]}
+            if [ ! -z $BASH_SOURCE ]; then
+                begin=0
+            end=$((end-1))
+            fi
+
+            func_desc=(${func_desc[$begin,$im1]} ${func_desc[$ip1,$end]})
+
+
         # XXX il faudrait pouvoir supprimer les exemples sans tout supprimer
-        unset func_desc
+        #unset func_desc
+        fi
     fi
 }
 
-function set_desc(){
+
+set_desc(){
     if [ "$1" = "add" ]; then
         if [ -z ${func_desc+x} ]; then
             func_desc=()
@@ -80,35 +160,33 @@ function set_desc(){
 }
 
 
-function _add_opt(){
+_add_opt(){
     opt_list+=($1)
     opt_desc+=("$2")
 }
 
-function _remove_opt(){
+
+_remove_opt(){
     if [ -z ${opt_list+x} ] || [ -z ${opt_desc+x} ]; then
         echo "Error : Cannot remove option"
     else
-        _get_index $1
-        # XXX verifier si on a trouve
-        if [ -z $BASH_SOURCE]; then
-            im1=$index
-            ip1=$((index+2))
-            end=${#opt_list[@]}
-        else
-            im1=$((index-1))
-            ip1=$((index+1))
-            end=${#opt_list[@]}
+        if ! _get_index $1; then return 1; fi
+        local im1=$((index-1))
+        local ip1=$((index+1))
+        local begin=1
+        local end=${#opt_list[@]}
+        if [ ! -z $BASH_SOURCE ]; then
+            begin=0
             end=$((end-1))
         fi
 
-        opt_list=(${opt_list[1,$im1]} ${opt_list[$ip1,$end]})
-        opt_desc=(${opt_desc[1,$im1]} ${opt_desc[$ip1,$end]})
+        opt_list=(${opt_list[$begin,$im1]} ${opt_list[$ip1,$end]})
+        opt_desc=(${opt_desc[$begin,$im1]} ${opt_desc[$ip1,$end]})
     fi
 }
 
 
-function set_opt_list(){
+set_opt_list(){
     if [ "$1" = "add" ]; then
         if [ -z ${opt_list+x} ]; then
             opt_list=()
@@ -134,7 +212,7 @@ function set_opt_list(){
 
 
 
-function set_args(){
+set_args(){
     array=()
     for args in $@;
     do
@@ -184,7 +262,7 @@ function set_args(){
 
 
 
-function test_set_params(){
+test_set_params(){
     set_args $@
     echo $mtoto $mtutu $mtiti $mtata
 }

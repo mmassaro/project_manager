@@ -19,10 +19,10 @@ normal=$(tput sgr0)
 
 
 _columnize_option () {
-    indent=$1;
-    size=$(($(tput cols)-indent));
-    option="$2";
-    value=$3;
+    local indent=$1;
+    local size=$(($(tput cols)-indent));
+    local option="$2";
+    local value=$3;
     while [ $(echo -n $value| wc -c) -gt 0 ] ;
     do
         printf "        ";
@@ -36,15 +36,19 @@ _columnize_option () {
 }
 
 _columnize_example () {
-    indent=$1;
-    size=$(($(tput cols)-indent));
-    value=$2;
-    symb="$ "
-    iterator=1
+    local indent=$1;
+    local size=$(($(tput cols)-indent));
+    local value=$2;
+    local it=$3
+    local symb="$ "
     while [ $(echo -n $value| wc -c) -gt 0 ] ;
     do
         printf "        ";
-        printf "($((iterator++))) $symb";
+        if [ "$symb" = "$ " ]; then
+            printf "($it) $symb";
+        else
+            printf "    $symb";
+        fi
         printf "%-${indent}s\n" "${value:0:$size}";
         symb="  "
         value=${value:$size};
@@ -52,9 +56,9 @@ _columnize_example () {
 }
 
 _columnize_description () {
-    indent=$1;
-    size=$(($(tput cols)-indent));
-    value=$2;
+    local indent=$1;
+    local size=$(($(tput cols)-indent));
+    local value=$2;
     while [ $(echo -n $value| wc -c) -gt 0 ] ;
     do
         printf "        ";
@@ -67,7 +71,7 @@ _columnize_description () {
 
 
 
-function _display_desc(){
+_display_desc(){
     if [ -z ${func_desc+x} ]; then
         echo "Error : There is no description to display"
     else
@@ -79,22 +83,25 @@ function _display_desc(){
         fi
 
         echo "${bold}EXAMPLE(S)${normal}"
+        local iterator=1
         if [ -z $BASH_SOURCE ]; then
             for ((i=2; i<=${#func_desc[@]}; i++))
             do
-                _columnize_example 40 ${func_desc[$i]}
+                _columnize_example 40 "${func_desc[$i]}" $iterator
+                ((iterator++))
             done
         else
             for ((i=1; i<${#func_desc[@]}; i++))
             do
-                _columnize_example 40 "${func_desc[$i]}"
+                _columnize_example 40 "${func_desc[$i]}" $iterator
+                ((iterator++))
             done
         fi
     fi
 }
 
 
-function _display_opt(){
+_display_opt(){
     if [ -z ${opt_list+x} ] || [ -z ${opt_desc+x} ]; then
         echo "Error : There is no option to display"
     else
@@ -114,9 +121,8 @@ function _display_opt(){
 }
 
 # je  cherche partout dans pmng si le fichier existe
-function display_man(){
+display_man(){
     local manual="$(find $PMNG -name $1.param)"
-    echo coucou $manual
     if [ ! "$manual" = "" ]; then
         source $manual
         _display_desc
