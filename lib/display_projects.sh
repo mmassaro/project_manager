@@ -69,8 +69,6 @@ _columnize_description () {
 
 
 
-
-
 _display_desc(){
     if [ -z ${func_desc+x} ]; then
         echo "Error : There is no description to display"
@@ -121,9 +119,8 @@ _display_opt(){
 }
 
 # je  cherche partout dans pmng si le fichier existe
-display_man(){
-    # available must be replace by enable. find dont find file in symlink
-    local manual="$(find $PMNG/projects/available -name $1.param)"
+func_man(){
+    local manual="$(find -L $PMNG/projects/enable -name $1.param)"
     if [ ! "$manual" = "" ]; then
         source $manual
         _display_desc
@@ -137,6 +134,65 @@ display_man(){
 }
 
 
+# TODO un jour ajouter une liste de toute les fonctions.
+# en vert et rouge en function de enable.
+# il faudrait pourvoir localiser le projet ou sont les fonctions pour les
+# activer si on veux
+# dans la fonctions func_man je devrait afficher  un message en rouge pour
+# dire qu'elle n'est pas activé
+func_list(){
+    local projectname
+    local funcname
+    local indent
+    local size
+    local option
+    local value
+
+    local mtype="enabled"
+
+    echo "${bold}List of $mtype functions${normal}"
+    if [ "$mtype" = "all" ]; then
+        echo "(* = disabled function)"
+    fi
+    echo "Type \"func_man function_name\" to see the manual."
+    echo ""
+    echo "${bold}Function   Project    Description${normal}"
+    echo "${bold}---------------------------------${normal}"
+    for func in $(find -L $PMNG/projects/enable -name '*.param'); do
+        source $func
+
+        projectname=$(basename $(dirname "$func"))
+        funcname=$(basename "$func")
+        funcname="${funcname%.*}"
+
+
+        indent=40;
+        size=$(($(tput cols)-indent));
+        option="$funcname";
+        if [ -z $BASH_SOURCE ]; then
+            value="${func_desc[1]}"
+        else
+            value="${func_desc[0]}"
+        fi
+
+        while [ $(echo -n $value| wc -c) -gt 0 ] ;
+        do
+            tput bold;
+            printf "%-11s" "$funcname";
+            tput sgr0;
+            printf "%-11s" "$projectname";
+            printf "%-${indent}s\n" "${value:0:$size}";
+            funcname="";
+            value=${value:$size};
+        done
+
+
+        unset opt_list
+        unset opt_desc
+        unset func_desc
+    done
+    
+}
 
 
 

@@ -29,7 +29,7 @@ project() {
         for project in $PMNG/projects/available/*; do
             p=$(basename $project)
             if [ -f "$project/README.md" ]; then
-                description=$(cat "$project/README.md" | /usr/bin/grep 'project-description' | sed 's/\#[[:space:]]project-description[[:space:]]:[[:space:]]//')
+                description=$(cat "$project/README.md" | grep 'project-description' | sed 's/\#[[:space:]]project-description[[:space:]]:[[:space:]]//')
             else
                 description="Description unreadable. File name no standart"
             fi

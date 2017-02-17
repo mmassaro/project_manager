@@ -48,7 +48,7 @@ new_project(){
   # Need help ?
   _contains "-h" $@
   if [ "$?" = "0" ]; then
-    display_man latex
+    func_man latex
     return 1
   fi
 
@@ -59,7 +59,7 @@ new_project(){
   INSTALL_DIR=.
   if ! _check_args $@; then 
     printf "\nERROR : Wrong list of parameter:\n"
-    display_man latex
+    func_man latex
     return 1
   fi
 
@@ -98,7 +98,8 @@ _create_letter(){
     mv $INSTALL_DIR/$projectName/sample_letter.tex $INSTALL_DIR/$projectName/$filename.tex
   fi
   if [ -f $INSTALL_DIR/$projectName/sconstruct ]; then
-    sed -i "s/toto.tex/$filename.tex/g" $INSTALL_DIR/$projectName/sconstruct
+    sed "s/toto.tex/$filename.tex/g" $INSTALL_DIR/$projectName/sconstruct > tmp
+    mv tmp $INSTALL_DIR/$projectName/sconstruct
   fi
 
 

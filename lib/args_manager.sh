@@ -16,16 +16,12 @@
 
 
 
-# XXX dans l'ideal on installe ca dans un .projet_latex
 # XXX Bash/ksh : array from 0 !!! Zsh and other array from 1
 # XXX KSH = meme traitement que bash
-# XXX Deux choses prioritaires.
-# 1: la fonction recherche doit rechercher exactement les termes
-# 2: il faut verifier que les champs entrés sont bons
-# XXX Le declare -g ne fonctionne pas avec les anciennes version de bash
-# XXX Il faut ajouter une fonction qui importe une fonction fonction de
-# l'utilisateur et une autre qui en telecharge une
 
+# XXX Deux choses prioritaires.
+# OK 1: la fonction recherche doit rechercher exactement les termes
+# 2: il faut verifier que les champs entrés sont bons
 
 
 #_get_index(){
@@ -221,12 +217,10 @@ set_args(){
 
     export _SET_DEFAULT_="1"
     if [ -z $BASH_SOURCE ]; then
-    # available must be replace by enable. find dont find file in symlink
-        local manual="$(find $PMNG/projects/available -name ${array[1]}.param)"
+        local manual="$(find -L $PMNG/projects/enable -name ${array[1]}.param)"
         source $manual
     else
-    # available must be replace by enable. find dont find file in symlink
-        local manual="$(find $PMNG/projects/available -name ${array[0]}.param)"
+        local manual="$(find -L $PMNG/projects/enable -name ${array[0]}.param)"
         source $manual
     fi
     unset _SET_DEFAULT_
@@ -236,7 +230,7 @@ set_args(){
         do
             _get_index_silent ${array[$i]}
             if [[ $index != 1000 ]]; then
-                opt=$(echo ${opt_list[$((index+1))]} | sed 's/-/m/')
+                opt=$(echo ${opt_list[$((index))]} | sed 's/-/m/')
                 ptr_opt="$opt"
                 declare -g "$ptr_opt"="${array[$((i+1))]}"
             fi
