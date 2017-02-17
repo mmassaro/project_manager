@@ -34,9 +34,10 @@ _create_sconstruct(){
 _check_args(){
   if [[ $# -ge 2 ]] && [[ ${1:0:1} != "-"  ]]; then
     local available_type=("article" "beamer" "letter" "poster" "thesis")
-    _contains "$2" $available_type
-    echo $?
+    if ! _contains "$2" ${available_type[@]}; then return 1; fi
+    return 0
   fi
+  return 1
 }
 
 
@@ -56,14 +57,11 @@ new_project(){
 
   # Check arguments
   INSTALL_DIR=.
-  local check="$(_check_args $@)"
-  if [ "$check" = "1" ]; then
-    echo "\nERROR : Wrong list of parameter:\n"
+  if ! _check_args $@; then 
+    printf "\nERROR : Wrong list of parameter:\n"
     display_man latex
     return 1
   fi
-
-
 
   # Create the directory
   if [ ! -d $INSTALL_DIR/$projectName ]; then
@@ -73,7 +71,7 @@ new_project(){
       _create_sconstruct $INSTALL_DIR/$projectName
     fi
 
-    cp $PLTX/func/latex/templates/$projectType/* "$INSTALL_DIR/$projectName/"
+    cp $PMNG/projects/enable/latex/templates/$projectType/* "$INSTALL_DIR/$projectName/"
 
 
 

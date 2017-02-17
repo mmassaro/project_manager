@@ -122,7 +122,8 @@ _display_opt(){
 
 # je  cherche partout dans pmng si le fichier existe
 display_man(){
-    local manual="$(find $PMNG -name $1.param)"
+    # available must be replace by enable. find dont find file in symlink
+    local manual="$(find $PMNG/projects/available -name $1.param)"
     if [ ! "$manual" = "" ]; then
         source $manual
         _display_desc

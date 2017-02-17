@@ -221,9 +221,13 @@ set_args(){
 
     export _SET_DEFAULT_="1"
     if [ -z $BASH_SOURCE ]; then
-        source $PMNG/func/${array[1]}/param_${array[1]}.sh
+    # available must be replace by enable. find dont find file in symlink
+        local manual="$(find $PMNG/projects/available -name ${array[1]}.param)"
+        source $manual
     else
-        source $PMNG/func/${array[0]}/param_${array[0]}.sh
+    # available must be replace by enable. find dont find file in symlink
+        local manual="$(find $PMNG/projects/available -name ${array[0]}.param)"
+        source $manual
     fi
     unset _SET_DEFAULT_
 
