@@ -17,6 +17,14 @@
 bold=$(tput bold)
 normal=$(tput sgr0)
 
+_is_project_enabled() {
+    if [ -d "$PMNG/projects/enable/$1" ]; then
+        return 0
+    else
+        return 1
+    fi
+}
+
 
 _columnize_option () {
     local indent=$1;
@@ -147,18 +155,26 @@ func_list(){
     local size
     local option
     local value
+    local type="enable"
+    
+    local mtype="all"
 
-    local mtype="enabled"
+    if [ "$1" = "-all" ]; then
+        type="available"
+    elif [[ $# -ne 0 ]]; then
+        echo "ERROR : Wrong parameter"
+        return 1
+    fi
 
     echo "${bold}List of $mtype functions${normal}"
-    if [ "$mtype" = "all" ]; then
+    if [ "$1" = "-all" ]; then
         echo "(* = disabled function)"
     fi
     echo "Type \"func_man function_name\" to see the manual."
     echo ""
     echo "${bold}Function   Project    Description${normal}"
     echo "${bold}---------------------------------${normal}"
-    for func in $(find -L $PMNG/projects/enable -name '*.param'); do
+    for func in $(find -L $PMNG/projects/$type -name '*.param'); do
         source $func
 
         projectname=$(basename $(dirname "$func"))
@@ -168,7 +184,13 @@ func_list(){
 
         indent=40;
         size=$(($(tput cols)-indent));
-        option="$funcname";
+
+        if _is_project_enabled $projectname; then 
+            option="$funcname";
+        else
+            option="*$funcname";
+        fi
+
         if [ -z $BASH_SOURCE ]; then
             value="${func_desc[1]}"
         else
@@ -178,11 +200,11 @@ func_list(){
         while [ $(echo -n $value| wc -c) -gt 0 ] ;
         do
             tput bold;
-            printf "%-11s" "$funcname";
+            printf "%-11s" "$option";
             tput sgr0;
             printf "%-11s" "$projectname";
             printf "%-${indent}s\n" "${value:0:$size}";
-            funcname="";
+            option="";
             value=${value:$size};
         done
 
