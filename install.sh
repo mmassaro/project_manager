@@ -18,8 +18,15 @@ main(){
   source ./lib/toogle.sh
   source ./lib/add_project.sh
   source ./lib/display_projects.sh
+  source ./lib/generate_param_file.sh
   source ./lib/args_manager.sh
 
+  for f in $(/bin/ls $PMNG/projects/enable);
+  do
+    source $PMNG/projects/enable/$f/*.sh;
+  done
+
+  generate_param_file
 }
 
 main

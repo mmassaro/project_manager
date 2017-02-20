@@ -126,10 +126,14 @@ _display_opt(){
     fi
 }
 
-# je  cherche partout dans pmng si le fichier existe
 func_man(){
-    local manual="$(find -L $PMNG/projects/enable -name $1.param)"
+    local manual="$(find -L $PMNG/projects/available -name $1.param)"
     if [ ! "$manual" = "" ]; then
+        local projectname=$(basename $(dirname "$manual"))
+        if [ ! -L $PMNG/projects/enable/$projectname ]; then
+            echo "(WARNING : This function appears in the project \"$projectname\" which is not enable)"
+            echo ""
+        fi
         source $manual
         _display_desc
         _display_opt
@@ -142,12 +146,6 @@ func_man(){
 }
 
 
-# TODO un jour ajouter une liste de toute les fonctions.
-# en vert et rouge en function de enable.
-# il faudrait pourvoir localiser le projet ou sont les fonctions pour les
-# activer si on veux
-# dans la fonctions func_man je devrait afficher  un message en rouge pour
-# dire qu'elle n'est pas activé
 func_list(){
     local projectname
     local funcname
@@ -156,7 +154,7 @@ func_list(){
     local option
     local value
     local type="enable"
-    
+
     local mtype="all"
 
     if [ "$1" = "-all" ]; then
@@ -172,8 +170,8 @@ func_list(){
     fi
     echo "Type \"func_man function_name\" to see the manual."
     echo ""
-    echo "${bold}Function   Project    Description${normal}"
-    echo "${bold}---------------------------------${normal}"
+    echo "${bold}Function          Project           Description${normal}"
+    echo "${bold}-----------------------------------------------${normal}"
     for func in $(find -L $PMNG/projects/$type -name '*.param'); do
         source $func
 
@@ -200,11 +198,12 @@ func_list(){
         while [ $(echo -n $value| wc -c) -gt 0 ] ;
         do
             tput bold;
-            printf "%-11s" "$option";
+            printf "%-18s" "$option";
             tput sgr0;
-            printf "%-11s" "$projectname";
+            printf "%-18s" "$projectname";
             printf "%-${indent}s\n" "${value:0:$size}";
             option="";
+            projectname="";
             value=${value:$size};
         done
 

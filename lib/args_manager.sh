@@ -270,11 +270,4 @@ test_set_params(){
 
 
 
-for f in $(/bin/ls $PMNG/projects/enable);
-do
-    source $PMNG/projects/enable/$f/*.sh;
-done
-
-
-
 
