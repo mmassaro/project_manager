@@ -9,5 +9,7 @@ set_opt_list add -option "premiere option de generate2"
 set_opt_list add -option2 "deuxieme option de generate2"
 
 if [ $_SET_DEFAULT_ = 1 ]; then
-# Set default values to the options.
+  # Set default values to the options.
+  moption=# option : -option "premiere option de generate2"
+  moption2=# option : -option2 "deuxieme option de generate2"
 fi

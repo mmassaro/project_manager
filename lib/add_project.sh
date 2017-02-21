@@ -1,4 +1,18 @@
 # vim: set sw=4 ts=4 sts=4 et tw=78 foldmarker={{{,}}} foldlevel=0 foldmethod=marker:
+#
+#                                   _      _
+#                   _o)   __ _  ___/ /__ _/ /_  __ _  (o_
+#################   /\\  /  ' \/ _  / _ `/ _  \/  ' \ //\   ##################
+#                   \_v /_/_/_/\_,_/\_, /_/ /_/_/_/_/ v_/
+#                                  /___/
+#
+# Author:       Michel Massaro
+# Version :     V1.0
+# Date :        20/01/17
+# Description : 
+#
+#
+##############################################################################
 
 # extension="${filename##*.}"
 # filename="${filename%.*}"

@@ -1,8 +1,10 @@
-#                                      _
-#                      _o)   __ _  ___/ /__  __ _  (o_
-####################   /\\  /  ' \/ _  / _ `/  ' \ //\   #####################
-#                      \_v /_/_/_/\_,_/\_, /_/_/_/ v_/
-#                                     /___/
+# vim: set sw=4 ts=4 sts=4 et tw=78 foldmarker={{{,}}} foldlevel=0 foldmethod=marker:
+#
+#                                   _      _
+#                   _o)   __ _  ___/ /__ _/ /_  __ _  (o_
+#################   /\\  /  ' \/ _  / _ `/ _  \/  ' \ //\   ##################
+#                   \_v /_/_/_/\_,_/\_, /_/ /_/_/_/_/ v_/
+#                                  /___/
 #
 # Author:       Michel Massaro
 # Version :     V0.1
@@ -10,8 +12,6 @@
 # Description : projet for latex
 #
 ##############################################################################
-
-
 
 
 # encore pas mal de restriction.
@@ -65,7 +65,7 @@ _generate_param_function() {
 
     rm tmp
 
-    sed -i '/sed -n/d' $dir/$1.param
+    #sed -i '/sed -n/d' $dir/$1.param
   fi
 
 }
@@ -78,8 +78,8 @@ generate_param_file() {
     local func
 
     cat $file | grep "\#[[:space:]]function_name" > tmp2
-    sed -i '/cat/d' tmp2
-    sed -i '/space/d' tmp2
+    #sed -i '/cat/d' tmp2
+    #sed -i '/space/d' tmp2
     while IFS='' read -r func || [[ -n "$func"  ]]; do
       func=$(sed 's/\#[[:space:]]function_name[[:space:]]:[[:space:]]//g' <<< $func)
       _generate_param_function "$func" "$file"
