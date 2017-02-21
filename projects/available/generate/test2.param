@@ -5,9 +5,11 @@ set_desc add "voila la description de la fonction generate2"
 set_desc add "exemple pour la fonction generate2"
 
 # Set the list of options with description
-set_opt_list add -option "premiere option de generate2"
-set_opt_list add -option2 "deuxieme option de generate2"
+set_opt_list add -option3 "premiere option de generate2"
+set_opt_list add -option4 "deuxieme option de generate2"
 
 if [ $_SET_DEFAULT_ = 1 ]; then
-# Set default values to the options.
+  # Set default values to the options.
+  moption3=# option : -option3 "premiere option de generate2"
+  moption4=# option : -option4 "deuxieme option de generate2"
 fi
