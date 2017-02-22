@@ -209,6 +209,7 @@ set_opt_list(){
 
 
 set_args(){
+    local manual ll
     array=()
     for args in $@;
     do
@@ -217,10 +218,10 @@ set_args(){
 
     export _SET_DEFAULT_="1"
     if [ -z $BASH_SOURCE ]; then
-        local manual="$(find -L $PMNG/projects/enable -name ${array[1]}.param)"
+        manual="$(find -L $PMNG/projects/enable -name ${array[1]}.param)"
         source $manual
     else
-        local manual="$(find -L $PMNG/projects/enable -name ${array[0]}.param)"
+        manual="$(find -L $PMNG/projects/enable -name ${array[0]}.param)"
         source $manual
     fi
     unset _SET_DEFAULT_
@@ -247,16 +248,43 @@ set_args(){
         done
     fi
 
+    if [ -z $BASH_SOURCE ]; then
+        for ((i=1; i<=${#opt_list[@]}; i++))
+        do
+            ll=$(sed 's/-/m/g' <<< ${opt_list[$i]})
+            if [ "${!ll}" = "REQUIRE" ]; then
+                echo "ERROR : Missing parameter"
+                ll=$(basename $manual)
+                export _SOURCED_="1"
+                func_man ${ll%.*}
+                unset _SOURCED_
+                return 1
+            fi
+        done
+    else
+        for ((i=0; i<${#opt_list[@]}; i++))
+        do
+            ll=$(sed 's/-/m/g' <<< ${opt_list[$i]})
+            if [ "${!ll}" = "REQUIRE" ]; then
+                echo "ERROR : Missing parameter"
+                ll=$(basename $manual)
+                export _SOURCED_="1"
+                func_man ${ll%.*}
+                unset _SOURCED_
+                return 1
+            fi
+        done
+    fi
+
+
     unset ptr_opt
     unset opt
     unset opt_desc
     unset opt_list
     unset func_desc
+
+    return 0
 }
-
-
-
-
 
 
 

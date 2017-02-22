@@ -17,6 +17,6 @@ set_opt_list add -fname "Name of the document"
 if [ "$_SET_DEFAULT_" = "1" ]; then
     # Set default values to the options.
     mauthor="John Doe"
-    mfins="NONE"
+    mfins="REQUIRE"
     mfname="NONE"
 fi

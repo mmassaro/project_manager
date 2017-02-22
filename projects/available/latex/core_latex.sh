@@ -48,7 +48,7 @@ new_project(){
   # Need help ?
   _contains "-h" $@
   if [ "$?" = "0" ]; then
-    func_man latex
+    func_man new_project
     return 1
   fi
 
@@ -59,7 +59,7 @@ new_project(){
   INSTALL_DIR=.
   if ! _check_args $@; then 
     printf "\nERROR : Wrong list of parameter:\n"
-    func_man latex
+    func_man new_project
     return 1
   fi
 
@@ -76,7 +76,7 @@ new_project(){
 
 
   # This function search and set the optionnal arguments
-  set_args latex $@
+  if ! set_args new_project $@; then return 1; fi
 
 
     case $projectType in

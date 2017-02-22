@@ -29,8 +29,8 @@ test2() {
 # function_name : test2
 # description : "voila la description de la fonction generate2"
 # example : "exemple pour la fonction generate2"
-# option : -option "premiere option de generate2"
-# option : -option2 "deuxieme option de generate2"
+# option : -option3 "premiere option de generate2"
+# option : -option4 "deuxieme option de generate2"
 
   echo COUCOU2 je suis $0
 

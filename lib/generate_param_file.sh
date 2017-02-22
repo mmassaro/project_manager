@@ -46,6 +46,7 @@ _generate_param_function() {
     sed -n '/'"$1"'()/,/^[^#]/p' $2 | grep option > tmp
     while IFS='' read -r line || [[ -n "$line"  ]]; do
       line=$(sed 's/\#[[:space:]]option[[:space:]]:[[:space:]]//g' <<< $line)
+      line=$(sed 's/[[:space:]]DEFAULT.*//' <<< $line)
       echo "set_opt_list add $line" >> $dir/$1.param
     done < "tmp"
 
