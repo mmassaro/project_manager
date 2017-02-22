@@ -24,11 +24,12 @@ _generate_autocomplete_function() {
 
   args=""
   sed -n '/'"$1"'()/,/^[^#]/p' $3 | grep option > tmp
-    while IFS='' read -r line || [[ -n "$line"  ]]; do
-      ll=$(sed 's/\#[[:space:]]option[[:space:]]:[[:space:]]//g' <<< $line)
-      ll=$(sed 's/[[:space:]].*//' <<< $ll)
-      args="$args $ll"
-    done < "tmp"
+  while IFS='' read -r line || [[ -n "$line"  ]]; do
+    ll=$(sed 's/\#[[:space:]]option[[:space:]]:[[:space:]]//g' <<< $line)
+    ll=$(sed 's/[[:space:]].*//' <<< $ll)
+    echo $args ---- $ll
+    args="$args $ll"
+  done < "tmp"
 
   echo "  opts=\"$args\"" >> $PMNG/projects/enable/$2/autocomplete.sh
 
@@ -49,27 +50,24 @@ generate_autocomplete_file() {
 
     if [ ! -f $PMNG/projects/enable/$project/autocomplete.sh ]; then
 
-      for file in $(find -L $PMNG/projects/enable/$project -name '*.sh'); do
+      touch $PMNG/projects/enable/$project/autocomplete.sh
 
-        cat $file | grep "\#[[:space:]]function_name" > tmp2
-        while IFS='' read -r func || [[ -n "$func"  ]]; do
+      for file in $(find -L $PMNG/projects/enable/$project -name '[^autocomplete]*.sh'); do
+
+        local func
+
+        cat $file | grep "\#[[:space:]]function_name" > tmp3
+        while IFS='' read -r func || [[ -n "$func" ]]; do
           func=$(sed 's/\#[[:space:]]function_name[[:space:]]:[[:space:]]//g' <<< $func)
           _generate_autocomplete_function $func $project $file
-        done < "tmp2"
+        done < "tmp3"
 
-        rm tmp2
+        rm tmp3
 
       done
 
-
     fi
 
-
-
-
-
-
-
-    done
+  done
 
 }

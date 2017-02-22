@@ -252,7 +252,7 @@ set_args(){
         for ((i=1; i<=${#opt_list[@]}; i++))
         do
             ll=$(sed 's/-/m/g' <<< ${opt_list[$i]})
-            if [ "${!ll}" = "REQUIRE" ]; then
+            if [ "${(P)ll}" = "REQUIRE" ]; then
                 echo "ERROR : Missing parameter"
                 ll=$(basename $manual)
                 export _SOURCED_="1"

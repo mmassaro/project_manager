@@ -51,7 +51,7 @@ _generate_param_function() {
     done < "tmp"
 
     echo "" >> $dir/$1.param
-    echo "if [ "\$_SET_DEFAULT_" = "1" ]; then" >> $dir/$1.param
+    echo "if [ \"\$_SET_DEFAULT_\" = \"1\" ]; then" >> $dir/$1.param
     echo "  # Set default values to the options." >> $dir/$1.param
 
     sed -n '/'"$1"'()/,/^[^#]/p' $2 | grep option > tmp
@@ -81,7 +81,7 @@ generate_param_file() {
     cat $file | grep "\#[[:space:]]function_name" > tmp2
     #sed -i '/cat/d' tmp2
     #sed -i '/space/d' tmp2
-    while IFS='' read -r func || [[ -n "$func"  ]]; do
+    while IFS='' read -r func || [[ -n "$func" ]]; do
       func=$(sed 's/\#[[:space:]]function_name[[:space:]]:[[:space:]]//g' <<< $func)
       _generate_param_function "$func" "$file"
     done < "tmp2"

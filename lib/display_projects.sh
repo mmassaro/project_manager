@@ -134,7 +134,7 @@ func_man(){
             echo "(WARNING : This function appears in the project \"$projectname\" which is not enable)"
             echo ""
         fi
-        if [ ! "$_SOURCED_" = "1"]; then
+        if [ ! "$_SOURCED_" = "1" ]; then
             source $manual
         fi
         _display_desc

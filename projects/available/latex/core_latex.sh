@@ -63,6 +63,12 @@ new_project(){
     return 1
   fi
 
+  # This function search and set the optionnal arguments
+  if ! set_args new_project $@; then 
+    return 1
+  fi
+
+
   # Create the directory
   if [ ! -d $INSTALL_DIR/$projectName ]; then
     mkdir $INSTALL_DIR/$projectName
@@ -75,8 +81,6 @@ new_project(){
 
 
 
-  # This function search and set the optionnal arguments
-  if ! set_args new_project $@; then return 1; fi
 
 
     case $projectType in
