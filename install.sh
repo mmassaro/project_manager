@@ -31,9 +31,12 @@ main(){
   source ./lib/args_manager.sh
   source ./lib/scriplets.sh
 
-  for f in $(/bin/ls $PMNG/projects/enable);
+  for project in $(/bin/ls $PMNG/projects/enable);
   do
-    source $PMNG/projects/enable/$f/*.sh;
+      for file in $PMNG/projects/enable/$project/*.sh;
+      do
+          source $PMNG/projects/enable/$project/$(basename $file);
+      done
   done
 
   generate_param_file
