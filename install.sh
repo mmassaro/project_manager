@@ -23,13 +23,12 @@ main(){
     bashcompinit
   fi
 
-  source ./lib/toogle.sh
-  source ./lib/add_project.sh
-  source ./lib/display_projects.sh
-  source ./lib/generate_param_file.sh
-  source ./lib/generate_autocomplete_file.sh
-  source ./lib/args_manager.sh
-  source ./lib/scriplets.sh
+
+  for file in $PMNG/lib/*.sh;
+  do
+      source $PMNG/lib/$(basename $file);
+  done
+
 
   for project in $(/bin/ls $PMNG/projects/enable);
   do
