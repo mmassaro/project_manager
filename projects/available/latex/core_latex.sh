@@ -45,6 +45,17 @@ _check_args(){
 
 new_project(){
 
+# function_name : new_project
+# description : "Create a full template for a project LaTeX"
+# example : "new_project projectName article"
+# example : "new_project projectName thesis -author \"Jane Doe\" "
+# example : "new_project projectName beamer"
+# option : -h "Display this manual" DEFAULT = "NONE"
+# option : -author "Author name" DEFAULT = "John Doe"
+# option : -fins "Path of file.ins with general informations on author in a letter" DEFAULT = "NONE"
+# option : -fname "Name of the document" DEFAULT = "NONE"
+
+
   # Need help ?
   _contains "-h" $@
   if [ "$?" = "0" ]; then

@@ -1,9 +1,7 @@
-# vim: set sw=4 ts=4 sts=4 et tw=78 foldmarker={{{,}}} foldlevel=0 foldmethod=marker:
-
 # Set the description of the function
 set_desc add "Create a full template for a project LaTeX"
 
-# Set a list of examples
+# Set the list of example
 set_desc add "new_project projectName article"
 set_desc add "new_project projectName thesis -author \"Jane Doe\" "
 set_desc add "new_project projectName beamer"
@@ -15,8 +13,9 @@ set_opt_list add -fins "Path of file.ins with general informations on author in 
 set_opt_list add -fname "Name of the document"
 
 if [ "$_SET_DEFAULT_" = "1" ]; then
-    # Set default values to the options.
-    mauthor="John Doe"
-    mfins="REQUIRE"
-    mfname="NONE"
+  # Set default values to the options.
+  mh="NONE"
+  mauthor="John Doe"
+  mfins="NONE"
+  mfname="NONE"
 fi

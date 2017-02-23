@@ -15,6 +15,7 @@
 
 main(){
 
+  EDITOR="vim"
   PMNG=$PWD
 
   if [ -z $BASH_SOURCE ];then
@@ -28,6 +29,7 @@ main(){
   source ./lib/generate_param_file.sh
   source ./lib/generate_autocomplete_file.sh
   source ./lib/args_manager.sh
+  source ./lib/scriplets.sh
 
   for f in $(/bin/ls $PMNG/projects/enable);
   do
