@@ -30,8 +30,8 @@ _is_project_exists() {
 # XXX dans cette version, je ne modifie pas les path
 import_project() {
 
-    local filename="foo"
-    local projectname="foo"
+    local filename
+    local projectname
 
     if [[ $# -eq 1 ]]; then
         if [[ -d $1 ]]; then

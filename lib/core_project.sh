@@ -14,23 +14,47 @@
 #
 ##############################################################################
 
-# XXX check parameter
-# XXX add import
-# XXX security for remove project
-# XXX faire des petites fonctions
-# XXX parametre locaux
+_check_project_contains(){
+  local e
+  for e in "${@:2}"; do [[ "$e" == "$1" ]] && return 0; done
+  return 1
+}
 
 _check_project_args() {
+    local available_mode
+    local current_mode
+
+    if [ ! "$1" = "" ]; then
+        available_mode=("show" "enable" "disable" "man" "add" "remove")
+        if ! _check_project_contains "$1" ${available_mode[@]}; then return 1; fi
+
+        current_mode=("enable" "disable" "remove" "man")
+        if _check_project_contains "$1" ${current_mode[@]}; then 
+            if [ "$2" = "" ] || [ ! "$3" = "" ]; then return 1; fi
+        fi
+
+        current_mode=("show")
+        if _check_project_contains "$1" ${current_mode[@]}; then 
+            if [ ! "$2" = "" ]; then return 1; fi
+        fi
+    else
+        _print_usage "project"
+        return 1
+    fi
+
     echo "A faire"
-    retrun $2
+    return 0
 }
 
 _print_usage(){
     echo "Usage: `basename $1` option [project_name]"
     echo "option :"
-    echo "         show"
-    echo "         enable  (project_name required)"
+    echo "         add     (project_name and project required)"
     echo "         disable (project_name required)"
+    echo "         enable  (project_name required)"
+    echo "         man     (project_name required)"
+    echo "         remove  (project_name required)"
+    echo "         show"
 }
 
 _project_show() {
@@ -83,43 +107,45 @@ _project_disable() {
 }
 
 _project_man() {
-    if [ -f "$PMNG/available/$1/README.md" ]; then
-        less $PMNG/available/$1/README.md
+    if [ -f "$PMNG/projects/available/$1/README.md" ]; then
+        less $PMNG/projects/available/$1/README.md
     else
         echo "There is no man for $1"
     fi
 }
 
 _project_add() {
-    echo "A faire"
+    import_project $@
 }
 
 
 _project_remove() {
-    if [ -d "$PMNG/available/$1" ]; then
-        rm -rf $PMNG/available/$1
+    local answer
+    if [ -d "$PMNG/projects/available/$1" ]; then
+        read -p "Are you sure ? [Y/n] : " answer
+        answer=${answer:-Y}
+        if [ "$answer" = "Y" ]; then
+            rm -rf $PMNG/projects/available/$1
+        elif [ ! "$answer" = "n" ]; then
+            echo "Consider it's no ..."
+        fi
+    else
+        echo "Project $1 not found"
     fi
 }
 
 
-# faire un case
 project() {
-
     if ! _check_project_args $@; then _print_usage $0; return 1; fi
 
-    if [ "$1" = "show" ]; then
-        _project_show
-    elif [ "$1" = "enable" ]; then
-        _project_enable $2
-    elif [ "$1" = "disable" ]; then
-        _project_disable $2
-    elif [ "$1" = "man" ]; then
-        _project_man $2
-    elif [ "$1" = "add" ]; then
-        _project_add
-    elif [ "$1" = "remove" ]; then
-        _project_remove $2
-    fi
+    case $1 in
+      show) _project_show;;
+      enable) _project_enable $2;;
+      disable) _project_disable $2;;
+      man)  _project_man $2;;
+      add)  _project_add ${@:2};;
+      remove)  _project_remove $2
+    esac
 
     return 0
 }
