@@ -19,29 +19,6 @@
 # XXX Bash/ksh : array from 0 !!! Zsh and other array from 1
 # XXX KSH = meme traitement que bash
 
-# XXX Deux choses prioritaires.
-# OK 1: la fonction recherche doit rechercher exactement les termes
-# 2: il faut verifier que les champs entrés sont bons
-
-
-#_get_index(){
-#    index="$(echo ${opt_list[@]/$1//} | cut -d/ -f1 | wc -w | tr -d ' ')"
-#    last=${#opt_list[@]}
-#    if [ "$index" = "$last" ]; then
-#        echo "Error : Option $1 not found"
-#        # XXX valeur de retour pour l'erreur
-#        index=1000
-#    fi
-#}
-#
-#_get_index_silent(){
-#    index="$(echo ${opt_list[@]/$1//} | cut -d/ -f1 | wc -w | tr -d ' ')"
-#    last=${#opt_list[@]}
-#    if [ "$index" = "$last" ]; then
-#        index=1000
-#    fi
-#}
-
 
 # Attention difference bash zsh. bash de 0 a n-1
 _get_index() {
@@ -129,9 +106,6 @@ _remove_desc(){
 
             func_desc=(${func_desc[$begin,$im1]} ${func_desc[$ip1,$end]})
 
-
-        # XXX il faudrait pouvoir supprimer les exemples sans tout supprimer
-        #unset func_desc
         fi
     fi
 }

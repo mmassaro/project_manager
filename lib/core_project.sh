@@ -38,15 +38,13 @@ _check_project_args() {
             if [ ! "$2" = "" ]; then return 1; fi
         fi
     else
-        _print_usage "project"
+        _print_project_usage "project"
         return 1
     fi
-
-    echo "A faire"
     return 0
 }
 
-_print_usage(){
+_print_project_usage(){
     echo "Usage: `basename $1` option [project_name]"
     echo "option :"
     echo "         add     (project_name and project required)"
@@ -118,15 +116,17 @@ _project_add() {
     import_project $@
 }
 
-
 _project_remove() {
     local answer
     if [ -d "$PMNG/projects/available/$1" ]; then
-        read -p "Are you sure ? [Y/n] : " answer
-        answer=${answer:-Y}
-        if [ "$answer" = "Y" ]; then
+        echo "Are you sure ? [y/N] : "
+        read answer
+        answer=${answer:-N}
+        if [ "$answer" = "y" ]; then
+            if _is_project_enabled $1; then project disable $1; fi
             rm -rf $PMNG/projects/available/$1
-        elif [ ! "$answer" = "n" ]; then
+            echo "Project $1 removed"
+        elif [ ! "$answer" = "N" ]; then
             echo "Consider it's no ..."
         fi
     else
@@ -136,7 +136,7 @@ _project_remove() {
 
 
 project() {
-    if ! _check_project_args $@; then _print_usage $0; return 1; fi
+    if ! _check_project_args $@; then _print_project_usage $0; return 1; fi
 
     case $1 in
       show) _project_show;;

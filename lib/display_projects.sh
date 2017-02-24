@@ -155,12 +155,12 @@ func_list(){
     local size
     local option
     local value
-    local type="enable"
-
-    local mtype="all"
+    local state="enable"
+    local mtype="enabled"
 
     if [ "$1" = "-all" ]; then
-        type="available"
+        state="available"
+        mtype="all"
     elif [[ $# -ne 0 ]]; then
         echo "ERROR : Wrong parameter"
         return 1
@@ -174,7 +174,7 @@ func_list(){
     echo ""
     echo "${bold}Function          Project           Description${normal}"
     echo "${bold}-----------------------------------------------${normal}"
-    for func in $(find -L $PMNG/projects/$type -name '*.param'); do
+    for func in $(find -L $PMNG/projects/$state -name '*.param'); do
         source $func
 
         projectname=$(basename $(dirname "$func"))

@@ -76,7 +76,7 @@ generate_param_file() {
 
   for file in $(find -L $PMNG/projects/enable -name '*.sh'); do
 
-    local func
+    local func=""
 
     cat $file | grep "\#[[:space:]]function_name" > tmp2
     #sed -i '/cat/d' tmp2
