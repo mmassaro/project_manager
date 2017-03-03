@@ -38,3 +38,41 @@ _project() {
 complete -F _project -o default project
 
 
+
+_scriptlet() {
+    local cur prev prevprev opts
+    COMPREPLY=()
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    prev="${COMP_WORDS[COMP_CWORD-1]}"
+    opts="add man remove revise show"
+
+    opts_man=""
+    for ll in $(basename $(find $PMNG/projects/available -name "*.sh")); do
+        ll="${ll%.*}"
+        opts_man="$opts_man $ll";
+    done
+
+
+    if [[ $COMP_CWORD -eq 1 ]]; then
+        COMPREPLY=( $(compgen -W "$opts" -- ${cur}) )
+    elif [[ $COMP_CWORD -eq 2 ]]; then
+        case $prev in
+            man) COMPREPLY=( $(compgen -W  "$opts_man" -- ${cur}) );;
+            disable) COMPREPLY=( $(compgen -W  "$opts_toto2" -- ${cur}) );;
+            disable) COMPREPLY=( $(compgen -W  "$opts_toto2" -- ${cur}) );;
+            disable) COMPREPLY=( $(compgen -W  "$opts_toto2" -- ${cur}) );;
+            enable) COMPREPLY=( $(compgen -W "$opts_toto3" -- ${cur}) );;
+        esac
+    elif [[ $COMP_CWORD -eq 3 ]]; then
+        prevprev="${COMP_WORDS[COMP_CWORD-2]}"
+        case $prevprev in
+            disable) COMPREPLY=( $(compgen -W  "$opts_toto" -- ${cur}) );;
+            enable) COMPREPLY=( $(compgen -W  "gogo gugu" -- ${cur}) );;
+        esac
+    fi
+  return 0
+}
+
+complete -F _scriptlet -o default scriptlet
+
+
