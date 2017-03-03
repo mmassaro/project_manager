@@ -47,10 +47,37 @@ _scriptlet() {
     opts="add man remove revise show"
 
     opts_man=""
-    for ll in $(basename $(find $PMNG/projects/available -name "*.sh")); do
-        ll="${ll%.*}"
-        opts_man="$opts_man $ll";
+    for ll in $(find $PMNG/projects/available -name "*.param"); do
+      ll=$(basename $ll)
+      ll="${ll%.*}"
+      opts_man="$opts_man $ll";
     done
+
+    opts_add="misc"
+    opts_revise="misc"
+    opts_remove="misc"
+
+    opts_show="-all"
+
+    if [[ $COMP_CWORD -eq 3 ]]; then
+      prevprev="${COMP_WORDS[COMP_CWORD-2]}"
+
+      opts_revise2=""
+      for ll in $(find $PMNG/projects/available/$prev -name "*.param"); do
+        ll=$(basename $ll)
+        ll="${ll%.*}"
+        opts_revise2="$opts_revise2 $ll";
+      done
+
+      opts_remove2=""
+      for ll in $(find $PMNG/projects/available/$prev -name "*.param"); do
+        ll=$(basename $ll)
+        ll="${ll%.*}"
+        opts_remove2="$opts_revise2 $ll";
+      done
+    fi
+
+
 
 
     if [[ $COMP_CWORD -eq 1 ]]; then
@@ -58,16 +85,20 @@ _scriptlet() {
     elif [[ $COMP_CWORD -eq 2 ]]; then
         case $prev in
             man) COMPREPLY=( $(compgen -W  "$opts_man" -- ${cur}) );;
-            disable) COMPREPLY=( $(compgen -W  "$opts_toto2" -- ${cur}) );;
-            disable) COMPREPLY=( $(compgen -W  "$opts_toto2" -- ${cur}) );;
-            disable) COMPREPLY=( $(compgen -W  "$opts_toto2" -- ${cur}) );;
-            enable) COMPREPLY=( $(compgen -W "$opts_toto3" -- ${cur}) );;
+            add) COMPREPLY=( $(compgen -W  "$opts_add" -- ${cur}) );;
+            revise) COMPREPLY=( $(compgen -W  "$opts_revise" -- ${cur}) );;
+            remove) COMPREPLY=( $(compgen -W  "$opts_remove" -- ${cur}) );;
+            show) 
+                if [[ ${cur} == -*  ]] ; then
+                   COMPREPLY=( $(compgen -W "$opts_show" -- ${cur}) )
+                 else
+                   COMPREPLY=()
+                 fi;;
         esac
     elif [[ $COMP_CWORD -eq 3 ]]; then
-        prevprev="${COMP_WORDS[COMP_CWORD-2]}"
         case $prevprev in
-            disable) COMPREPLY=( $(compgen -W  "$opts_toto" -- ${cur}) );;
-            enable) COMPREPLY=( $(compgen -W  "gogo gugu" -- ${cur}) );;
+            revise) COMPREPLY=( $(compgen -W  "$opts_revise2" -- ${cur}) );;
+            remove) COMPREPLY=( $(compgen -W  "$opts_remove2" -- ${cur}) );;
         esac
     fi
   return 0

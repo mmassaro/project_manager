@@ -92,12 +92,10 @@ new_project(){
 
 
 
-
-
     case $projectType in
       letter) _create_letter;;
       thesis) echo "ceci est une these";;
-      article) echo "ceci est un article";;
+      article) _create_article;;
       beamer)  echo "ceci est une presentation";;
       poster)  echo "ceci est un poster"
     esac
@@ -117,13 +115,23 @@ _create_letter(){
     mv tmp $INSTALL_DIR/$projectName/sconstruct
   fi
 
-
   if [ ! "$mfins" = "NONE" ]; then
     rm $INSTALL_DIR/nomprenom.ins
     cp $mfins $INSTALL_DIR/nomprenom.ins
   fi
+}
 
 
+_create_article(){
+  local filename="sample_article"
+  if [ ! "$mfname" = "NONE" ]; then
+    filename=$mfname
+    mv $INSTALL_DIR/$projectName/sample_article.tex $INSTALL_DIR/$projectName/$filename.tex
+  fi
+  if [ -f $INSTALL_DIR/$projectName/sconstruct ]; then
+    sed "s/toto.tex/$filename.tex/g" $INSTALL_DIR/$projectName/sconstruct > tmp
+    mv tmp $INSTALL_DIR/$projectName/sconstruct
+  fi
 
 }
 
