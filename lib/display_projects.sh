@@ -170,7 +170,7 @@ func_list(){
     if [ "$1" = "-all" ]; then
         echo "(* = disabled function)"
     fi
-    echo "Type \"func_man function_name\" to see the manual."
+    echo "Type \"scriptlet man function_name\" to see the manual."
     echo ""
     echo "${bold}Function          Project           Description${normal}"
     echo "${bold}-----------------------------------------------${normal}"
@@ -195,6 +195,9 @@ func_list(){
             value="${func_desc[1]}"
         else
             value="${func_desc[0]}"
+        fi
+        if [ "$value" = "" ]; then 
+            value="n/a"
         fi
 
         while [ $(echo -n $value| wc -c) -gt 0 ] ;
